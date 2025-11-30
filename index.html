@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Esquiva el Meteoro</title>
+
+<style>
+  body {
+    background: #222;
+    color: white;
+    font-family: Arial;
+    text-align: center;
+    overflow: hidden;
+  }
+
+  #jugador {
+    width: 50px;
+    height: 50px;
+    background: #4dff4d;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+  }
+
+  .meteoro {
+    width: 40px;
+    height: 40px;
+    background: red;
+    position: absolute;
+    top: 0;
+    border-radius: 50%;
+  }
+
+  #puntaje {
+    font-size: 24px;
+    margin-top: 20px;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>ESQUIVA LOS 3 METEOROS</h2>
+<p id="puntaje">Puntaje: 0</p>
+
+<div id="jugador"></div>
+
+<div id="m1" class="meteoro"></div>
+<div id="m2" class="meteoro"></div>
+<div id="m3" class="meteoro"></div>
+
+<script>
+  var jugador = document.getElementById("jugador");
+  var puntaje = document.getElementById("puntaje");
+
+  var meteoros = [
+    document.getElementById("m1"),
+    document.getElementById("m2"),
+    document.getElementById("m3")
+  ];
+
+  var puntos = 0;
+  var jugadorX = window.innerWidth / 2;
+
+  var posY = [0, -200, -400];
+
+  document.onkeydown = function(e) {
+    if (e.key === "ArrowLeft") {
+      jugadorX -= 25;
+    }
+    if (e.key === "ArrowRight") {
+      jugadorX += 25;
+    }
+    jugador.style.left = jugadorX + "px";
+  };
+
+  setInterval(function() {
+
+    for (var i = 0; i < meteoros.length; i++) {
+
+      posY[i] += 15;
+      meteoros[i].style.top = posY[i] + "px";
+
+      if (posY[i] > window.innerHeight) {
+        puntos++;
+        puntaje.textContent = "Puntaje: " + puntos;
+
+        posY[i] = 0;
+        meteoros[i].style.left = Math.random() * (window.innerWidth - 50) + "px";
+      }
+
+      var j = jugador.getBoundingClientRect();
+      var m = meteoros[i].getBoundingClientRect();
+
+      var colision = !(m.right < j.left ||
+                       m.left > j.right ||
+                       m.bottom < j.top ||
+                       m.top > j.bottom);
+
+      if (colision) {
+        puntos--;
+        puntaje.textContent = "Puntaje: " + puntos;
+
+        posY[i] = 0;
+        meteoros[i].style.left = Math.random() * (window.innerWidth - 50) + "px";
+      }
+
+    }
+
+  }, 40);
+</script>
+</body>
+</html>
+
+
+
+
+
